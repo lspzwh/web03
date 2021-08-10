@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .main{
+        position: relative; 
+        width: 802px; 
+        height: 802px; 
+        overflow: hidden; 
+        margin:0 auto;
+        padding: 0;
+    }
+    .turntable{
+        width: 802px;
+        height: 802px;
+        margin: 0px;
+    }
+    .btn{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 320px;
+        height: 320px;
+        border-radius: 100%; 
+        margin: -160px 0 0 -160px;
+        cursor: pointer; 
+        user-select: none;
+    }
+    .btn:active { 
+        transform: scale(0.9);
+    }
+</style>
+<body>
+    <div class="main">
+        <img src="20201118154940939-1.png" class="turntable" id="turntable">
+        <img src="2020111815494699.png" class="btn" id="startButton">
+    </div>
+    <script>
+        let isRotate = true;
+        const data = [
+          {
+            name: '运动',
+            rotate: 0,
+          },
+          {
+            name: '学习',
+            rotate: 90,
+          },
+          {
+            name: '休息',
+            rotate: 180,
+          },
+          {
+            name: '喝奶茶',
+            rotate: 270,
+          }
+        ]
+        const game={
+            turntable:null,
+            angle:0,
+            lastAngle:0,
+            transitionTime:5,
+            init(turntable){
+                this.turntable=turntable
+                this.turntable.style.transition = `all ${this.transitionTime}s`
+            },
+            rotate(angle,callback){
+                const defaultAngle = 1800
+                this.angle+=defaultAngle+angle-this.lastAngle
+                this.lastAngle = angle
+                this.turntable.style.transform = `rotate(${this.angle}deg)`
+                setTimeout(() => {
+                    callback();
+                },this.transitionTime*1000);
+            }
+        }
+        const startGame=()=>{
+            if(!isRotate){
+                return;
+            }
+            isRotate=false;
+            const num = Math.floor(Math.random() * data.length);
+            game.rotate(data[num].rotate,()=>{
+                alert(`${data[num].name}`);
+                isRotate=true;
+            })
+        }
+    
+        window.onload = () => {
+            const turntable = document.getElementById('turntable')
+            const startButton = document.getElementById('startButton')
+            game.init(turntable)
+            startButton.onclick = startGame
+    }
+    </script>
+</body>
+</html>
